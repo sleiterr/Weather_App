@@ -1,58 +1,37 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { darkColors as colors } from "../../constants/colors";
-
-const textNav = [
-  {
-    id: 1,
-    title: "Oklahoma City",
-    dateLabel: "Mon 14 Oct",
-    coordinates: "35.4676° N, 97.5164° W",
-
-    titleStyle: {
-      fontWeight: "700",
-      fontSize: 30,
-      color: colors.textPrimary,
-      textTransform: "uppercase",
-      maxWidth: "100%",
-    },
-
-    subtitleStyle: {
-      fontWeight: "500",
-      fontSize: 10,
-      letterSpacing: 2,
-      color: colors.textSecondary,
-      textTransform: "uppercase",
-    },
-  },
-];
+import useWeatherApi from "../../hooks/useWeatherApi";
 
 const NavContent = () => {
+  const { currentWeather, error, isFetching } = useWeatherApi();
+
+  if (isFetching) return <Text style={styles.statusText}>Loading...</Text>;
+  if (error) return <Text style={styles.statusText}>{error}</Text>;
+
+  const city = currentWeather?.location?.name;
+  const localtime = currentWeather?.location?.localtime;
+  const lat = currentWeather?.location?.lat;
+  const lon = currentWeather?.location?.lon;
+
+  const coordinates =
+    lat !== undefined && lon !== undefined
+      ? `${Math.abs(lat).toFixed(4)}° ${lat >= 0 ? "N" : "S"}, ${Math.abs(lon).toFixed(4)}° ${lon >= 0 ? "E" : "W"}`
+      : "--";
+
   return (
     <View style={styles.container}>
-      <Navtem />
-    </View>
-  );
-};
-
-const Navtem = () => {
-  return (
-    <>
-      {textNav.map((item) => (
-        <View key={item.id} style={styles.block}>
-          <View style={styles.navContent}>
-            <Text style={item.titleStyle}>{item.title}</Text>
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
-            >
-              <Text style={item.subtitleStyle}>{item.dateLabel}</Text>
-              <View style={styles.dot} />
-              <Text style={item.subtitleStyle}>{item.coordinates}</Text>
-            </View>
+      <View style={styles.block}>
+        <View style={styles.navContent}>
+          <Text style={styles.titleStyle}>{city ?? "--"}</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <Text style={styles.subtitleStyle}>{localtime ?? "--"}</Text>
+            <View style={styles.dot} />
+            <Text style={styles.subtitleStyle}>{coordinates}</Text>
           </View>
         </View>
-      ))}
-    </>
+      </View>
+    </View>
   );
 };
 
@@ -62,14 +41,35 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     alignItems: "center",
-    paddingTop: 34,
-    paddingBottom: 50,
+    marginTop: 34,
+    marginBottom: 30,
+  },
+
+  statusText: {
+    color: colors.textPrimary,
+    fontSize: 16,
   },
 
   navContent: {
     flex: 0,
     alignItems: "center",
     minWidth: 0,
+  },
+
+  titleStyle: {
+    fontWeight: "700",
+    fontSize: 30,
+    color: colors.textPrimary,
+    textTransform: "uppercase",
+    maxWidth: "100%",
+  },
+
+  subtitleStyle: {
+    fontWeight: "500",
+    fontSize: 10,
+    letterSpacing: 2,
+    color: colors.textSecondary,
+    textTransform: "uppercase",
   },
 
   block: {
