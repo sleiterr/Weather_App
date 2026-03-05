@@ -1,0 +1,31 @@
+---
+title: Components
+description: Main components and their roles in the Weather App
+---
+
+## Overview
+
+Components are grouped by role: feature, UI, and layout.
+
+## Layout and Navigation
+
+- `components/layout/TabBar.js` — custom bottom tab bar with blur effect.
+- `app/(tabs)/_layout.js` — tab navigation config via Expo Router.
+
+## Feature Components
+
+- `components/features/NavContent.js` — top content/navigation block for Home.
+- `components/features/WeatherCardsGrid.js` — weather metrics grid.
+- `components/features/HourlyForecastRow.js` — hourly forecast section.
+- `components/features/AlertBadge.js` — additional alert/status indicator.
+
+## UI Components
+
+- `components/ui/TemperatureHero.js` — main temperature hero block.
+- `components/ui/ConditionsCard.js` — base metric card.
+- `components/ui/HourlyWeatherItem.js` — hourly forecast item component.
+
+## Screens Using These Components
+
+- Home: `app/(tabs)/index.js` composes `NavContent`, `TemperatureHero`, `AlertBadge`, `WeatherCardsGrid`, `HourlyForecastRow`.
+- 7-Day: `app/(tabs)/favorites.js` renders day forecast cards with accordion details.

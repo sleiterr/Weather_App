@@ -1,0 +1,44 @@
+{
+  "$schema": "https://docs.page/schema.json",
+  "name": "Weather App",
+  "description": "Expo + React Native weather application with current weather, hourly forecast, and 7-day forecast.",
+  "theme": {
+    "primary": "#C8FF00"
+  },
+  "sidebar": [
+    {
+      "group": "Start Here",
+      "pages": [
+        {
+          "title": "Home",
+          "href": "/"
+        },
+        {
+          "title": "Project Overview",
+          "href": "/project-overview"
+        },
+        {
+          "title": "Project Structure",
+          "href": "/project-structure"
+        }
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        {
+          "title": "Components",
+          "href": "/components"
+        },
+        {
+          "title": "API & Data Mapping",
+          "href": "/api-data-mapping"
+        },
+        {
+          "title": "Next Steps",
+          "href": "/next-steps"
+        }
+      ]
+    }
+  ]
+}

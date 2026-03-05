@@ -89,8 +89,8 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     alignItems: "center",
-    marginTop: 34,
-    marginBottom: 30,
+    marginTop: 42,
+    marginBottom: 10,
   },
 
   statusText: {

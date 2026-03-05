@@ -1,0 +1,31 @@
+---
+title: Project Overview
+description: Project goal, key features, and user flow
+---
+
+## Goal
+
+This project is an educational case study built with React Native and Expo Router.
+The main focus is fetching and presenting weather data in a clean and understandable UI.
+
+## Key Features
+
+- Current weather (temperature, condition, icon)
+- Metrics cards (wind, humidity, UV, air quality)
+- Hourly forecast for the next 6 hours
+- 7-day forecast with accordion details
+- Custom TabBar with blur effect
+
+## User Flow
+
+1. The user opens Home and sees current weather.
+2. The user checks hourly forecast and quick metrics.
+3. The user switches to the 7-Day tab for detailed forecast data.
+4. The user expands a day card to view precip, wind, UV, sunrise, and sunset.
+
+## Data Flow (Short)
+
+- `hooks/useWeatherApi.js` requests data from WeatherAPI (`forecast.json`).
+- `constants/weatherApi.js` builds URLs with query params and API key.
+- `util/weatherHelpers.js` maps weather codes to icon names.
+- UI components render prepared values in screen sections.

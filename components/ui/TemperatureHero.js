@@ -11,11 +11,11 @@ export default function TemperatureHero() {
   if (isFetching) return <Text style={styles.statusText}>Loading...</Text>;
   if (error) return <Text style={styles.statusText}>{error}</Text>;
 
-  const temp = currentWeather?.current?.temp_f;
+  const temp = currentWeather?.current?.temp_c;
   const displayTemp = Number.isFinite(temp) ? Math.trunc(temp) : "--";
   const iconName = weatherCodeToIcon(
     currentWeather?.current?.condition?.code,
-    currentWeather?.current?.is_day
+    currentWeather?.current?.is_day,
   );
 
   return (
@@ -34,13 +34,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "baseline",
     gap: 10,
-    marginBottom: 20,
+    marginBottom: 10,
   },
+
   statusText: {
     color: colors.textPrimary,
     fontSize: 16,
     marginBottom: 20,
   },
+
   temperature: {
     fontWeight: "700",
     fontSize: 128,

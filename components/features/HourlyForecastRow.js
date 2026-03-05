@@ -11,12 +11,18 @@ export default function HourlyForecastRow() {
   if (isFetching) return <Text style={styles.statusText}>Loading...</Text>;
   if (error) return <Text style={styles.statusText}>{error}</Text>;
 
-  const hourlyForecast = currentWeather?.forecast?.forecastday?.[0]?.hour;
-  if (!hourlyForecast?.length)
+  const forecastDays = currentWeather?.forecast?.forecastday ?? [];
+  const allHourlyForecast = forecastDays.flatMap((day) => day?.hour ?? []);
+
+  if (!allHourlyForecast.length)
     return <Text style={styles.statusText}>No forecast data</Text>;
 
-  const now = new Date();
-  const currentHour = now.getHours();
+  const localTime = currentWeather?.location?.localtime;
+  const localHourPart = localTime?.split(" ")?.[1]?.split(":")?.[0];
+  const parsedLocalHour = Number(localHourPart);
+  const currentHour = Number.isFinite(parsedLocalHour)
+    ? parsedLocalHour
+    : new Date().getHours();
 
   const formatHourLabel = (time) => {
     const hourPart = time?.split(" ")?.[1]?.split(":")?.[0];
@@ -30,25 +36,22 @@ export default function HourlyForecastRow() {
     return `${twelveHour}${suffix}`;
   };
 
-  const hourlyData = hourlyForecast
+  const hourlyData = allHourlyForecast
     .slice(currentHour, currentHour + 6)
     .map((hourItem, index) => {
-      const hourLabel =
-        index === 0
-          ? "NOW"
-          : formatHourLabel(hourItem.time);
+      const hourLabel = index === 0 ? "NOW" : formatHourLabel(hourItem.time);
       return {
         id: index + 1,
         isNow: index === 0,
         value: hourLabel,
-        temperature: Math.trunc(hourItem.temp_f),
+        temperature: Math.trunc(hourItem.temp_c),
         icon: weatherCodeToIcon(hourItem.condition.code, hourItem.is_day),
       };
     });
 
   return (
-    <View>
-      <Text>Hourly Forecast</Text>
+    <View style={styles.container}>
+      <Text style={styles.titleHourly}>Hourly Forecast</Text>
       <View style={styles.rowChip}>
         {hourlyData.map((item) => (
           <HourlyWeatherItem
@@ -77,6 +80,10 @@ export default function HourlyForecastRow() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginVertical: 30,
+  },
+
   rowChip: {
     flexDirection: "row",
     alignItems: "center",
@@ -95,6 +102,15 @@ const styles = StyleSheet.create({
   nowChipCard: {
     backgroundColor: colors.accent,
     borderColor: colors.accent,
+  },
+
+  titleHourly: {
+    fontWeight: "700",
+    fontSize: 10,
+    color: colors.textSecondary,
+    textTransform: "uppercase",
+    letterSpacing: 2,
+    paddingBottom: 18,
   },
 
   nowChipText: {

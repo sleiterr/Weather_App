@@ -1,0 +1,74 @@
+---
+title: API & Data Mapping
+description: How weather data is fetched and mapped to UI values and icons
+---
+
+# API & Data Mapping
+
+## API Configuration
+
+Weather API configuration is centralized in `constants/weatherApi.js`.
+
+Environment variables used:
+
+- `EXPO_PUBLIC_WEATHER_API_BASE_URL`
+- `EXPO_PUBLIC_WEATHER_API_KEY`
+
+The app currently requests:
+
+- Endpoint: `/forecast.json`
+- Query params: `q`, `days`, `aqi`
+
+## Fetch Layer
+
+`hooks/useWeatherApi.js` is the main data hook.
+
+It provides:
+
+- `currentWeather`
+- `isFetching`
+- `error`
+- `fetchWeather(city)`
+
+Default behavior:
+
+1. Uses `DEFAULT_CITY` (`Viborg`) on first load.
+2. Validates API key before requesting.
+3. Fetches forecast data with `days: 7` and `aqi: "yes"`.
+4. Handles API errors and sets a readable error message.
+
+## Data Used by Screens
+
+Main fields currently used from WeatherAPI response:
+
+- `current.*` for current conditions and metrics
+- `forecast.forecastday[]` for daily data
+- `forecast.forecastday[].hour[]` for hourly row
+- `location.localtime` for local hour calculations
+
+## Mapping Helpers
+
+Helper logic lives in `util/weatherHelpers.js`.
+
+- `weatherCodeToIcon(code, isDay)` maps WeatherAPI condition codes to Ionicons.
+- `getUvLevel(uv)` maps UV value to a level label.
+- `getAirQualityLevel(index)` maps US EPA index to a readable label.
+
+When a weather code is not mapped, the fallback icon is:
+
+- `help-circle-outline`
+
+## Where Mapping Is Used
+
+`weatherCodeToIcon` is used in:
+
+- `components/ui/TemperatureHero.js`
+- `components/features/HourlyForecastRow.js`
+- `components/features/WeatherCardsGrid.js`
+- `app/(tabs)/favorites.js`
+
+## Notes for Future Improvements
+
+- Add full WeatherAPI condition coverage to minimize fallback icons.
+- Consider a single shared weather store/context to avoid duplicated fetches.
+- Normalize temperature units (`°C`/`°F`) across all screens.

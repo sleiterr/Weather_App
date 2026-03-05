@@ -68,7 +68,7 @@ export default function CustomTabBar({ state, navigation }) {
             { color: isFavoritesActive ? activeColor : inactiveColor },
           ]}
         >
-          7-Day
+          7 - Day
         </Text>
       </Pressable>
     </BlurView>

@@ -1,0 +1,50 @@
+---
+title: Project Structure
+description: Current folder structure and responsibilities
+---
+
+## Structure
+
+```
+app/
+  _layout.js
+  index.js
+  (tabs)/
+    _layout.js
+    index.js
+    favorites.js
+assets/
+  icons/
+  images/
+components/
+  features/
+  layout/
+  ui/
+constants/
+  colors.js
+  weatherApi.js
+hooks/
+  useWeatherApi.js
+util/
+  weatherHelpers.js
+docs/
+```
+
+## Folders and Responsibilities
+
+- `app/` — screens and routing with Expo Router.
+- `components/features/` — larger feature blocks (grid, hourly row, nav content).
+- `components/ui/` — reusable UI elements.
+- `components/layout/` — layout/navigation parts (including custom TabBar).
+- `hooks/` — API fetching and loading state logic.
+- `constants/` — color theme and API configuration.
+- `util/` — formatting helpers and icon mapping.
+- `docs/` — docs.page documentation.
+
+## Important Files
+
+- `hooks/useWeatherApi.js` — main weather data fetch logic.
+- `app/(tabs)/index.js` — Home screen.
+- `app/(tabs)/favorites.js` — 7-Day Forecast screen.
+- `components/features/HourlyForecastRow.js` — hourly forecast row.
+- `util/weatherHelpers.js` — weather-code-to-icon mapping.
