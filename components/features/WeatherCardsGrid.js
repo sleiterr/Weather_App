@@ -4,7 +4,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { darkColors as colors } from "../../constants/colors";
 import ConditionsCard from "../ui/ConditionsCard";
 import useWeatherApi from "../../hooks/useWeatherApi";
-import { getUvLevel, getAirQualityLevel } from "../../util/weatherHelpers";
+import {
+  getUvLevel,
+  getAirQualityLevel,
+  weatherCodeToIcon,
+} from "../../util/weatherHelpers";
 
 export default function WeatherCardsGrid() {
   const { currentWeather, error, isFetching } = useWeatherApi();
@@ -14,6 +18,11 @@ export default function WeatherCardsGrid() {
   // Get descriptive levels for UV and Air Quality
   const airQualityIndex =
     currentWeather?.current?.air_quality?.["us-epa-index"];
+  
+  const iconName = weatherCodeToIcon(
+    currentWeather?.current?.condition?.code,
+    currentWeather?.current?.is_day
+  );
 
   if (isFetching) return <Text style={styles.statusText}>Loading...</Text>;
   if (error) return <Text style={styles.statusText}>{error}</Text>;
@@ -43,7 +52,7 @@ export default function WeatherCardsGrid() {
       title: "UV Index",
       value: uvValue,
       unit: getUvLevel(uvValue),
-      icon: "sunny-outline",
+      icon: iconName,
     },
     {
       id: 4,

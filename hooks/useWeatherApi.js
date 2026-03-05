@@ -6,7 +6,7 @@ import {
 } from "../constants/weatherApi";
 
 export default function useWeatherApi() {
-  const DEFAULT_CITY = "London";
+  const DEFAULT_CITY = "Kyiv";
 
   const [currentWeather, setCurrentWeather] = useState(null);
   const [error, setError] = useState(null);
@@ -22,8 +22,9 @@ export default function useWeatherApi() {
     setError(null);
 
     try {
-      const url = buildWeatherApiUrl(WEATHER_ENDPOINTS.current, {
+      const url = buildWeatherApiUrl(WEATHER_ENDPOINTS.forecast, {
         q: city,
+        days: 2,
         aqi: "yes",
       });
 

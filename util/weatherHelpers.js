@@ -27,3 +27,23 @@ export const getAirQualityLevel = (index) => {
       return "Unknown";
   }
 };
+
+// Map weather condition codes to Ionicons icon names
+export const weatherCodeToIcon = (code, isDay = 1) => {
+  switch (code) {
+    case 1000:
+      return isDay ? "sunny-outline" : "moon-outline";
+    case 1003:
+      return isDay ? "partly-sunny-outline" : "cloud-outline";
+    case 1006:
+    case 1009:
+      return "cloud-outline";
+    case 1183:
+    case 1063:
+      return "rainy-outline";
+    case 1117:
+      return "snow-outline";
+    default:
+      return "help-circle-outline";
+  }
+};
