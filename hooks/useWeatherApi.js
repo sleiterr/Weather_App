@@ -24,7 +24,7 @@ export default function useWeatherApi() {
     try {
       const url = buildWeatherApiUrl(WEATHER_ENDPOINTS.current, {
         q: city,
-        aqi: "no",
+        aqi: "yes",
       });
 
       const response = await fetch(url);

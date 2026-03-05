@@ -1,65 +1,89 @@
 import React from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { darkColors as colors } from "../../constants/colors";
 import ConditionsCard from "../ui/ConditionsCard";
-
-const cardsData = [
-  {
-    id: 1,
-    metric: "Wind",
-    value: 24,
-    unit: "MPH",
-    displayValue: "NW",
-  },
-  {
-    id: 2,
-    metric: "Humidity",
-    value: "82",
-    unit: "%",
-  },
-  {
-    id: 3,
-    metric: "UV Index",
-    value: 8,
-    unit: "Very High",
-  },
-  {
-    id: 4,
-    metric: "Air Quality",
-    value: 42,
-    unit: "Good",
-  },
-];
+import useWeatherApi from "../../hooks/useWeatherApi";
+import { getUvLevel, getAirQualityLevel } from "../../util/weatherHelpers";
 
 export default function WeatherCardsGrid() {
+  const { currentWeather, error, isFetching } = useWeatherApi();
+
+  // Extract UV and Air Quality values for display
+  const uvValue = currentWeather?.current?.uv;
+  // Get descriptive levels for UV and Air Quality
+  const airQualityIndex =
+    currentWeather?.current?.air_quality?.["us-epa-index"];
+
+  if (isFetching) return <Text style={styles.statusText}>Loading...</Text>;
+  if (error) return <Text style={styles.statusText}>{error}</Text>;
+
+  // Handle case where weather data is not available
+  if (!currentWeather?.current)
+    return <Text style={styles.statusText}>No weather data</Text>;
+
+  // Prepare data for each card
+  const weatherCards = [
+    {
+      id: 1,
+      title: "Wind",
+      value: currentWeather.current.wind_mph,
+      unit: currentWeather.current.wind_dir,
+      icon: "navigate-outline",
+    },
+    {
+      id: 2,
+      title: "Humidity",
+      value: currentWeather.current.humidity,
+      unit: "%",
+      icon: "water-outline",
+    },
+    {
+      id: 3,
+      title: "UV Index",
+      value: uvValue,
+      unit: getUvLevel(uvValue),
+      icon: "sunny-outline",
+    },
+    {
+      id: 4,
+      title: "Air Quality",
+      value: airQualityIndex,
+      unit: getAirQualityLevel(airQualityIndex),
+      icon: "leaf-outline",
+    },
+  ];
+
   return (
     <>
       <View style={styles.cardWraper}>
-        <DataItem />
+        {weatherCards.map((card) => (
+          <ConditionsCard key={card.id} style={styles.cardPadding}>
+            <View style={styles.headerRow}>
+              <Text style={styles.metric}>{card.title}</Text>
+              <Ionicons
+                name={card.icon}
+                size={14}
+                color={colors.textSecondary}
+              />
+            </View>
+            <View style={styles.valueWraper}>
+              <Text style={styles.value}>{card.value}</Text>
+              <Text style={styles.unit}>{card.unit}</Text>
+            </View>
+          </ConditionsCard>
+        ))}
       </View>
     </>
   );
 }
 
-const DataItem = () => {
-  return (
-    <>
-      {cardsData.map((item) => (
-        <ConditionsCard key={item.id} style={styles.cardPadding}>
-          <View>
-            <Text style={styles.metric}>{item.metric}</Text>
-          </View>
-          <View style={styles.valueWraper}>
-            <Text style={styles.value}>{item.value}</Text>
-            <Text style={styles.unit}>{item.unit}</Text>
-          </View>
-        </ConditionsCard>
-      ))}
-    </>
-  );
-};
-
 const styles = StyleSheet.create({
+  statusText: {
+    color: colors.textSecondary,
+    textAlign: "center",
+  },
+
   cardWraper: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -73,6 +97,12 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     letterSpacing: 1.2,
     textTransform: "uppercase",
+  },
+
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 
   value: {
@@ -92,6 +122,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "baseline",
     justifyContent: "flex-start",
+    gap: 4,
     width: "100%",
   },
 

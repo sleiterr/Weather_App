@@ -2,7 +2,7 @@ import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import NavContent from "../../components/features/NavContent";
 import TemperatureHero from "../../components/ui/TemperatureHero";
-import AlertBadgeButton from "../../components/features/AlertBadgeButton";
+import AlertBadge from "../../components/features/AlertBadge";
 import WeatherCardsGrid from "../../components/features/WeatherCardsGrid";
 import HourlyForecastRow from "../../components/features/HourlyForecastRow.js";
 import { darkColors as colors } from "../../constants/colors";
@@ -16,7 +16,7 @@ export default function DogApiScreen() {
     >
       <NavContent />
       <TemperatureHero />
-      <AlertBadgeButton />
+      <AlertBadge />
       <WeatherCardsGrid />
       <HourlyForecastRow />
     </ScrollView>

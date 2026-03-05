@@ -3,17 +3,65 @@ import { StyleSheet, Text, View } from "react-native";
 import { darkColors as colors } from "../../constants/colors";
 import useWeatherApi from "../../hooks/useWeatherApi";
 
+function formatLocalDateLabel(localtime) {
+  // Expected format: "2024-06-15 14:30"
+  if (!localtime) return "--";
+
+  // Extract the date part and split it into components
+  const [datePart] = localtime.split(" ");
+  // Split the date into year, month, and day
+  const [year, month, day] = datePart.split("-").map(Number);
+  // Validate the extracted components
+  if (!year || !month || !day) return "--";
+
+  // Define arrays for weekday and month labels
+  const weekdays = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+  // Define month labels
+  const months = [
+    "JAN",
+    "FEB",
+    "MAR",
+    "APR",
+    "MAY",
+    "JUN",
+    "JUL",
+    "AUG",
+    "SEP",
+    "OCT",
+    "NOV",
+    "DEC",
+  ];
+  // Create a Date object using UTC to avoid timezone issues
+  // month - 1 because JavaScript Date months are zero-indexed
+  const date = new Date(Date.UTC(year, month - 1, day));
+  // Get the weekday and month labels
+  const weekday = weekdays[date.getUTCDay()];
+  // Get the month label
+  const monthLabel = months[month - 1];
+  // Format the day with leading zero if necessary
+  const dayLabel = String(day).padStart(2, "0");
+
+  // Return the formatted date string
+  if (!weekday || !monthLabel) return "--";
+
+  // return the formatted date string in the format "WEEKDAY DD MONTH"
+  return `${weekday} ${dayLabel} ${monthLabel}`;
+}
+
 const NavContent = () => {
   const { currentWeather, error, isFetching } = useWeatherApi();
 
   if (isFetching) return <Text style={styles.statusText}>Loading...</Text>;
   if (error) return <Text style={styles.statusText}>{error}</Text>;
 
+  // Extract necessary data from the currentWeather object
   const city = currentWeather?.location?.name;
   const localtime = currentWeather?.location?.localtime;
+  const formattedDate = formatLocalDateLabel(localtime);
   const lat = currentWeather?.location?.lat;
   const lon = currentWeather?.location?.lon;
 
+  // Format the coordinates as "LAT° N/S, LON° E/W" or return "--" if data is missing
   const coordinates =
     lat !== undefined && lon !== undefined
       ? `${Math.abs(lat).toFixed(4)}° ${lat >= 0 ? "N" : "S"}, ${Math.abs(lon).toFixed(4)}° ${lon >= 0 ? "E" : "W"}`
@@ -25,7 +73,7 @@ const NavContent = () => {
         <View style={styles.navContent}>
           <Text style={styles.titleStyle}>{city ?? "--"}</Text>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-            <Text style={styles.subtitleStyle}>{localtime ?? "--"}</Text>
+            <Text style={styles.subtitleStyle}>{formattedDate}</Text>
             <View style={styles.dot} />
             <Text style={styles.subtitleStyle}>{coordinates}</Text>
           </View>
