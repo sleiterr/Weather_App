@@ -6,7 +6,7 @@ import {
 } from "../constants/weatherApi";
 
 export default function useWeatherApi() {
-  const DEFAULT_CITY = "Viborg";
+  const DEFAULT_CITY = "Kyiv, Ukraine";
 
   const [currentWeather, setCurrentWeather] = useState(null);
   const [error, setError] = useState(null);

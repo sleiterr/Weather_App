@@ -48,7 +48,7 @@ function formatWeekday(dateString) {
   return date.toLocaleDateString("en-US", { weekday: "long" }).toUpperCase();
 }
 
-// The main component for the Forecast screen, which displays a 7-day weather forecast with expandable details for each day.
+// The main component for the Forecast screen, which displays a forecast with expandable details for each day.
 export default function ForecastScreen() {
   const { currentWeather, error, isFetching } = useWeatherApi();
   const [expandedId, setExpandedId] = useState(1);
@@ -59,9 +59,8 @@ export default function ForecastScreen() {
   // currentWeather?.forecast?.forecastday is expected to be an array of forecast data for each day.
   const forecastDays = currentWeather?.forecast?.forecastday ?? [];
 
-  // Prepare the data for the forecast widgets by mapping over the forecastDays array and extracting relevant information for each day. This includes formatting dates, temperatures, precipitation chances, wind speeds, UV index, sunrise and sunset times, and determining the appropriate weather icon.
-  const forecastWidgets = Array.from({ length: 7 }, (_, index) => {
-    const dayData = forecastDays[index];
+  // Prepare the data for the forecast widgets by mapping over available forecast days from API.
+  const forecastWidgets = forecastDays.map((dayData, index) => {
     const dayInfo = dayData?.day;
     const astro = dayData?.astro;
     const avgTemp = dayInfo?.avgtemp_f;
@@ -94,13 +93,15 @@ export default function ForecastScreen() {
     setExpandedId((currentId) => (currentId === id ? 0 : id));
   };
 
+  const forecastTitle = `${forecastWidgets.length || 0} - Day Forecast`;
+
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      <Text style={styles.title}>7 - Day Forecast</Text>
+      <Text style={styles.title}>{forecastTitle}</Text>
 
       <View style={styles.widgetsList}>
         {forecastWidgets.map((widget) => (
